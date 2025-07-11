@@ -20,9 +20,7 @@ class ResidentsListComponent extends CBitrixComponent
     private $residentsIblockId;
     private $homesIblockId;
 
-    /**
-     * Подготовка параметров компонента
-     */
+    //Подготовка параметров компонента
     public function onPrepareComponentParams($arParams)
     {
         // Приведение типов и установка значений по умолчанию
@@ -34,9 +32,7 @@ class ResidentsListComponent extends CBitrixComponent
         return $arParams;
     }
 
-    /**
-     * Основной метод выполнения компонента
-     */
+    // Основной метод выполнения компонента
     public function executeComponent()
     {
         try {
@@ -48,9 +44,7 @@ class ResidentsListComponent extends CBitrixComponent
         }
     }
 
-    /**
-     * Проверка необходимых модулей
-     */
+    //Проверка необходимых модулей
     private function checkRequirements(): void
     {
         if (!Loader::includeModule('iblock')) {
@@ -58,9 +52,7 @@ class ResidentsListComponent extends CBitrixComponent
         }
     }
 
-    /**
-     * Инициализация ID инфоблоков
-     */
+    //Инициализация ID инфоблоков 
     private function initIblockIds(): void
     {
         $this->residentsIblockId = $this->getIblockIdByCode($this->arParams['RESIDENTS_IBLOCK_CODE']);
@@ -71,9 +63,7 @@ class ResidentsListComponent extends CBitrixComponent
         }
     }
 
-    /**
-     * Обработка запроса (обычный или AJAX)
-     */
+    //Обработка запроса (обычный или AJAX)
     private function processRequest(): void
     {
         $request = Context::getCurrent()->getRequest();
@@ -85,9 +75,7 @@ class ResidentsListComponent extends CBitrixComponent
         }
     }
 
-    /**
-     * Обработка AJAX-запроса
-     */
+    //Обработка AJAX-запроса
     private function processAjaxRequest(): void
     {
         $this->arResult = $this->prepareResultData();
@@ -98,9 +86,7 @@ class ResidentsListComponent extends CBitrixComponent
         exit;
     }
 
-    /**
-     * Обработка обычного запроса с кешированием
-     */
+    //Обработка обычного запроса с кешированием
     private function processRegularRequest(): void
     {
         $currentPage = Context::getCurrent()->getRequest()->get('PAGEN_nav-residents') ?: 1;
@@ -112,9 +98,7 @@ class ResidentsListComponent extends CBitrixComponent
         }
     }
 
-    /**
-     * Подготовка данных для результата
-     */
+    //Подготовка данных для результата
     private function prepareResultData(): array
     {
         $navigation = $this->createNavigation();
@@ -128,18 +112,14 @@ class ResidentsListComponent extends CBitrixComponent
         ];
     }
 
-    /**
-     * Получение ID инфоблока по коду
-     */
+    //Получение ID инфоблока по коду
     private function getIblockIdByCode(string $code): ?int
     {
         $iblock = CIBlock::GetList([], ['CODE' => $code, 'CHECK_PERMISSIONS' => 'N'])->Fetch();
         return $iblock ? (int)$iblock['ID'] : null;
     }
 
-    /**
-     * Создание объекта пагинации
-     */
+    //Создание объекта пагинации
     private function createNavigation(): PageNavigation
     {
         $nav = new PageNavigation('nav-residents');
@@ -149,9 +129,7 @@ class ResidentsListComponent extends CBitrixComponent
         return $nav;
     }
 
-    /**
-     * Получение списка жителей
-     */
+    //Получение списка жителей
     private function getResidents(PageNavigation $nav): array
     {
         $res = CIBlockElement::GetList(
@@ -179,9 +157,7 @@ class ResidentsListComponent extends CBitrixComponent
         return $items;
     }
 
-    /**
-     * Извлечение ID домов из списка жителей
-     */
+    //Извлечение ID домов из списка жителей
     private function extractHomeIds(array $residents): array
     {
         $ids = [];
@@ -193,9 +169,7 @@ class ResidentsListComponent extends CBitrixComponent
         return array_unique($ids);
     }
 
-    /**
-     * Получение данных о домах
-     */
+    //Получение данных о домах
     private function getHomes(array $homeIds): array
     {
         if (empty($homeIds) || !$this->homesIblockId) {
@@ -225,9 +199,7 @@ class ResidentsListComponent extends CBitrixComponent
         return $homes;
     }
 
-    /**
-     * Связывание жителей с домами
-     */
+    //Связывание жителей с домами
     private function combineResidentsWithHomes(array $residents, array $homes): array
     {
         $result = [];
@@ -242,9 +214,7 @@ class ResidentsListComponent extends CBitrixComponent
         return $result;
     }
 
-    /**
-     * Обработка ошибок
-     */
+    //Обработка ошибок
     private function handleError(string $message): void
     {
         $this->abortResultCache();
